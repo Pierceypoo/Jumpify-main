@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Jumpify",
+  "version": "1.0",
+  "action": {
+    "default_popup": ""
+  },
+  "icons": {
+    "16": "robot16.png",
+    "48": "robot48.png",
+    "128": "robot128.png"
+  },
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://apps.shopify.com/internal/v2/app-submissions/*/screening/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}

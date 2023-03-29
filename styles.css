@@ -1,0 +1,23 @@
+#fixed-menu {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+#fixed-menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#fixed-menu li {
+  margin-bottom: 8px;
+  cursor: pointer;
+  text-decoration: underline;
+}
