@@ -1,3 +1,0 @@
-# reviewify
-# piercejones
-# reviewify
