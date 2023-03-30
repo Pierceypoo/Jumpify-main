@@ -1,23 +1,60 @@
-#fixed-menu {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
+.jumpify-image {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 30px; /* Adjust according to your desired image size */
+  height: 30px; /* Adjust according to your desired image size */
 }
 
-#fixed-menu ul {
-  list-style-type: none;
+.jumpify-title {
+  font-family: "Arial", sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 10px;
+  color: #2c3e50;
+  text-align: center;
+  z-index: 1001;
+}
+
+.fixed-menu {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #F4F6F8;
+  padding: 20px;
+  font-family: "Helvetica Neue", sans-serif;
+  z-index: 1000;
+}
+
+.fixed-menu ul {
+  list-style: none;
   margin: 0;
   padding: 0;
 }
 
-#fixed-menu li {
-  margin-bottom: 8px;
+.fixed-menu li {
+  font-weight: bold;
   cursor: pointer;
-  text-decoration: underline;
+  padding: 5px 0;
+}
+
+.fixed-menu li:hover {
+  background-color: #E5F5FA;
+}
+
+.fixed-menu li ul {
+  margin-left: 10px;
+}
+
+.fixed-menu li ul li {
+  font-weight: normal;
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.fixed-menu li ul li:hover {
+  background-color: #B3E5FC;
 }

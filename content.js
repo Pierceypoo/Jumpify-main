@@ -1,6 +1,22 @@
 function createMenu() {
+  const menuWrapper = document.createElement("div");
+  menuWrapper.id = "menu-wrapper";
+
   const menu = document.createElement("div");
-  menu.id = "fixed-menu";
+  menu.className = "fixed-menu";
+  menuWrapper.appendChild(menu);
+
+  const jumpifyTitle = document.createElement("h1");
+  jumpifyTitle.textContent = "Jumpify";
+  jumpifyTitle.className = "jumpify-title";
+  menu.appendChild(jumpifyTitle);
+
+  const jumpifyImage = document.createElement("div");
+  jumpifyImage.style.backgroundImage = `url(${chrome.runtime.getURL("robot128.png")})`;
+  jumpifyImage.className = "jumpify-image";
+  
+  menu.appendChild(jumpifyImage);
+
 
   const menuItems = [
     {
@@ -83,7 +99,7 @@ function createMenu() {
     });
   });
 
-  return menu;
+  return menuWrapper;
 }
 
 function getElementByTextAndSize(text, size) {
@@ -106,15 +122,44 @@ function getElementByTextAndSize(text, size) {
 
 let observerInitialized = false;
 
+function injectStyles(url) {
+  const link = document.createElement("link");
+  link.href = url;
+  link.rel = "stylesheet";
+  document.head.appendChild(link);
+}
+
 function initObserver() {
   if (observerInitialized) return;
   observerInitialized = true;
 
+  injectStyles(chrome.runtime.getURL("styles.css")); // Update this line to set the URL of the external 'styles.css' file
+
   const observer = new MutationObserver((mutationsList) => {
+    let fixedMenu;
+
+const updateMenu = () => {
+  if (fixedMenu) {
+    fixedMenu.remove();
+  }
+  fixedMenu = createMenu();
+  document.body.appendChild(fixedMenu);
+};
+
     if (document.querySelector(".Polaris-Frame__Content_xd1mk")) {
-      const fixedMenu = createMenu();
-      document.body.appendChild(fixedMenu);
+      updateMenu();
+
       observer.disconnect();
+      
+      const contentObserver = new MutationObserver((mutationsList) => {
+        updateMenu();
+      });
+      
+      const contentNode = document.querySelector(".Polaris-Frame__Content_xd1mk");
+      if (contentNode) {
+        contentObserver.observe(contentNode, { childList: true, subtree: true });
+      }
+      
     }
   });
 
