@@ -1,4 +1,4 @@
-.jumpify-image {
+.reviewify-image {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -6,7 +6,8 @@
   height: 30px; /* Adjust according to your desired image size */
 }
 
-.jumpify-title {
+.reviewify-title {
+  position: relative;
   font-family: "Arial", sans-serif;
   font-size: 22px;
   font-weight: bold;
@@ -15,6 +16,17 @@
   color: #2c3e50;
   text-align: center;
   z-index: 1001;
+}
+
+.reviewify-title::after {
+  content: "";
+  position: absolute;
+  bottom: -20px; /* Position the border underneath the heading */
+  left: 50%; /* Position the border in the center */
+  transform: translateX(-50%);
+  width: 100px; /* Set the width of the border */
+  height: 1.5px; /* Set the height of the border */
+  background-color: #2c3e50; /* Set the color of the border */
 }
 
 .fixed-menu {
@@ -53,8 +65,11 @@
   font-weight: normal;
   cursor: pointer;
   padding: 5px 0;
+  transition: padding-left 0.3s ease;
 }
 
 .fixed-menu li ul li:hover {
   background-color: #B3E5FC;
+  padding-left: 6px;
+  transition: padding-left 0.3s ease;
 }

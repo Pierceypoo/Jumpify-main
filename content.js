@@ -6,16 +6,16 @@ function createMenu() {
   menu.className = "fixed-menu";
   menuWrapper.appendChild(menu);
 
-  const jumpifyTitle = document.createElement("h1");
-  jumpifyTitle.textContent = "Jumpify";
-  jumpifyTitle.className = "jumpify-title";
-  menu.appendChild(jumpifyTitle);
+  const reviewify = document.createElement("h1");
+  reviewify.textContent = "Reviewify";
+  reviewify.className = "reviewify-title";
+  menu.appendChild(reviewify);
 
-  const jumpifyImage = document.createElement("div");
-  jumpifyImage.style.backgroundImage = `url(${chrome.runtime.getURL("robot128.png")})`;
-  jumpifyImage.className = "jumpify-image";
+  const reviewifyImage = document.createElement("div");
+  reviewifyImage.style.backgroundImage = `url(${chrome.runtime.getURL("robot128.png")})`;
+  reviewifyImage.className = "reviewify-image";
   
-  menu.appendChild(jumpifyImage);
+  menu.appendChild(reviewifyImage);
 
 
   const menuItems = [
