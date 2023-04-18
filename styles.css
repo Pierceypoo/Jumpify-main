@@ -1,18 +1,12 @@
-.reviewify-image {
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 30px; /* Adjust according to your desired image size */
-  height: 30px; /* Adjust according to your desired image size */
-}
-
+/* Styles for the Reviewify title */
 .reviewify-title {
   position: relative;
+  padding: 50px 20px 20px 20px;
   font-family: "Arial", sans-serif;
   font-size: 22px;
   font-weight: bold;
   margin: 0;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
   color: #2c3e50;
   text-align: center;
   z-index: 1001;
@@ -21,55 +15,154 @@
 .reviewify-title::after {
   content: "";
   position: absolute;
-  bottom: -20px; /* Position the border underneath the heading */
-  left: 50%; /* Position the border in the center */
+  bottom: -5px;
+  left: 50%;
   transform: translateX(-50%);
-  width: 100px; /* Set the width of the border */
-  height: 1.5px; /* Set the height of the border */
-  background-color: #2c3e50; /* Set the color of the border */
+  width: 100px;
+  height: 1.5px;
+  background-color: #2c3e50;
 }
 
+/* Styles for the Reviewify image */
+.reviewify-image {
+  position: absolute !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 128px;
+  height: 128px;
+  margin-bottom: 10px;
+  padding-top: 50px;
+  z-index: 1050 !important;
+  top: 20px;
+  left: 20px;
+  border: 2px solid black;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+/* Styles for the fixed menu */
 .fixed-menu {
   position: fixed;
-  top: 100px;
-  left: 0;
-  width: 250px;
+  top: 0;
+  margin-top: 60px;
+  padding-bottom: 50px;
+  width: 240px;
   height: 100%;
   background-color: #F4F6F8;
-  padding: 20px;
+  padding: 5px;
   font-family: "Helvetica Neue", sans-serif;
+  border-right: 1px solid #C9CCCF;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
   z-index: 1000;
 }
 
+/* Styles for the main list */
 .fixed-menu ul {
   list-style: none;
-  margin: 0;
-  padding: 0;
+  margin-left: 30px;
 }
 
+/* Generic styles for menu items */
 .fixed-menu li {
+  position: relative;
   font-weight: bold;
   cursor: pointer;
-  padding: 5px 0;
+  padding-top: 12px;
 }
 
-.fixed-menu li:hover {
-  background-color: #E5F5FA;
+.menu-item-title {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.fixed-menu li ul {
-  margin-left: 10px;
+/* Styles for nested menu items */
+.fixed-menu ul ul {
+  padding-left: 1px;
+  padding-top: 5px;
 }
 
-.fixed-menu li ul li {
+.fixed-menu ul ul li {
   font-weight: normal;
   cursor: pointer;
   padding: 5px 0;
-  transition: padding-left 0.3s ease;
 }
 
 .fixed-menu li ul li:hover {
-  background-color: #B3E5FC;
+  background-color: #E6F4FB;
   padding-left: 6px;
-  transition: padding-left 0.3s ease;
+  transition: padding-left 0.6s ease;
+}
+
+/* Allows space between menu items and Reviewify title */
+.fixed-menu .main-list {
+  margin-top: 200px;
+  position: fixed;
+  top: 0;
+  padding-bottom: 50px;
+  width: 200px;
+  background-color: #F4F6F8;
+  padding: 5px;
+  font-family: "Helvetica Neue", sans-serif;
+  border-right: 0px solid;
+}
+
+.internal-notes-item {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #F4F6F8;
+  padding: 5px 0;
+  text-align: left;
+  padding-left: 20px;
+}
+
+.menu-item.screening-summary {
+  background-color: #F5F6F7;
+  font-weight: bold;
+}
+
+.submenu-list {
+  display: none;
+  margin-top: 2px;
+}
+
+.active .submenu-list {
+  display: block;
+}
+
+.menu-item-arrow-box {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 18px;
+  background-color: #E6F4FB;
+  border-radius: 4px;
+  margin-left: 20px;
+  transition: background-color 0.6s ease;
+  box-sizing: border-box;
+  border: 1px solid #ADD8E6;
+}
+
+.menu-item-arrow-box:hover {
+  background-color: #ADD8E6;
+}
+
+.active .menu-item-arrow-box {
+  background-color: #ADD8E6;
+}
+
+.menu-item-arrow {
+  font-size: 11px;
+}
+
+.active .menu-item-arrow {
+  font-size: 11px;
+  transition: ease ease-in-out 6s;
 }
