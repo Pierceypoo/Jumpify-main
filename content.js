@@ -1,4 +1,53 @@
-function createMenu() {
+/* Defines titles, for main-title and sub-title based on hierarchy classes in the DOM */
+function getSectionsAndSubsections() {
+  const mainContent = document.querySelector(".Polaris-Frame__Content_xd1mk");
+  const allSections = Array.from(mainContent.querySelectorAll(".pvZ5S"));
+
+  let parentTitle = "";
+
+  return allSections.map((section) => {
+    const titleElement = section.querySelector(
+      "p.Polaris-DisplayText_1u0t8, p.Polaris-DisplayText--sizeSmall_7647q"
+    );
+    const subTitleElement = section.querySelector(
+      'span[style="font-size: 1.6rem; font-weight: bold;"]'
+    );
+    const title = titleElement
+      ? titleElement.textContent.trim()
+      : subTitleElement
+      ? subTitleElement.textContent.trim()
+      : "";
+    const itemType = titleElement
+      ? "main-title"
+      : subTitleElement
+      ? "sub-title"
+      : "";
+
+    if (itemType === "main-title") {
+      parentTitle = title;
+    }
+
+    return {
+      title,
+      itemType,
+      parentTitle: itemType === "sub-title" ? parentTitle : "",
+      element: section,
+    };
+  });
+}
+
+/* Scrolls to section */
+function scrollToSection(element) {
+  if (element) {
+    const yOffset = -100; // Offset in pixels
+    const yPosition =
+      element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: yPosition, behavior: "smooth" });
+  }
+}
+
+/* Creates the menu and appends all elements to it */
+function createMenu(sectionsAndSubsections) {
   const menuWrapper = document.createElement("div");
   menuWrapper.id = "menu-wrapper";
 
@@ -6,121 +55,131 @@ function createMenu() {
   menu.className = "fixed-menu";
   menuWrapper.appendChild(menu);
 
+  const reviewifyImage = document.createElement("div");
+  reviewifyImage.className = "reviewify-image";
+  reviewifyImage.style.backgroundImage = `url(${chrome.runtime.getURL(
+    "robot128.png"
+  )})`;
+  menu.appendChild(reviewifyImage);
+
   const reviewify = document.createElement("h1");
   reviewify.textContent = "Reviewify";
   reviewify.className = "reviewify-title";
   menu.appendChild(reviewify);
 
-  const reviewifyImage = document.createElement("div");
-  reviewifyImage.style.backgroundImage = `url(${chrome.runtime.getURL("robot128.png")})`;
-  reviewifyImage.className = "reviewify-image";
-  
-  menu.appendChild(reviewifyImage);
-
-
-  const menuItems = [
-    {
-      title: "Core criteria",
-      fontSize: "1.25rem",
-      subsections: [
-        { title: "App checks", fontSize: "1.6rem" },
-        { title: "Authentication", fontSize: "1.6rem" },
-        { title: "Billing API", fontSize: "1.6rem" },
-        { title: "Submission requirements", fontSize: "1.6rem" },
-        { title: "Prohibited app type", fontSize: "1.6rem" },
-      ],
-    },
-    {
-      title: "App listing",
-      fontSize: "1.25rem",
-      subsections: [
-        { title: "Branding", fontSize: "1.6rem" },
-        { title: "Descriptions", fontSize: "1.6rem" },
-        { title: "Images and video", fontSize: "1.6rem" },
-        { title: "Pricing plans", fontSize: "1.6rem" },
-        { title: "App discovery content", fontSize: "1.6rem" },
-      ],
-    },
-    {
-      title: "App functionality",
-      fontSize: "1.25rem",
-      subsections: [
-        { title: "Merchant setup and workflows", fontSize: "1.6rem" },
-        { title: "Security", fontSize: "1.6rem" },
-        { title: "Risk", fontSize: "1.6rem" },
-        { title: "Billing", fontSize: "1.6rem" },
-        { title: "Re-installation", fontSize: "1.6rem" },
-      ],
-    },
-    {
-      title: "Uncategorized",
-      fontSize: "1.25rem",
-      subsections: [
-        { title: "Uncategorized errors and criteria", fontSize: "1.6rem" },
-      ],
-    }
-    // Add other section items here with their respective subsections...
-  ];
+  const menuItemsWrapper = document.createElement("div");
+  menuItemsWrapper.className = "menu-items-wrapper";
+  menu.appendChild(menuItemsWrapper);
 
   const list = document.createElement("ul");
+  list.className = "fixed-menu main-list";
   menu.appendChild(list);
 
-  menuItems.forEach((sectionItem) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = sectionItem.title;
-    listItem.addEventListener("click", () => {
-      const targetElement = getElementByTextAndSize(sectionItem.title, sectionItem.fontSize);
-      if (targetElement) {
-        const yOffset = targetElement.getBoundingClientRect().top + window.pageYOffset - 20;
-        window.scrollTo({ top: yOffset, behavior: "smooth" });
-      }
-    });
-    list.appendChild(listItem);
-
-    const subList = document.createElement("ul");
-    listItem.appendChild(subList);
-
-    sectionItem.subsections.forEach((subsectionItem) => {
-      const subListItem = document.createElement("li");
-      subListItem.textContent = subsectionItem.title;
-      
-      // Indent subsection menu items
-      subListItem.style.marginLeft = "20px";
-
-      subListItem.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const targetElement = getElementByTextAndSize(subsectionItem.title, subsectionItem.fontSize);
-        if (targetElement) {
-          const yOffset = targetElement.getBoundingClientRect().top + window.pageYOffset - 20;
-          window.scrollTo({ top: yOffset, behavior: "smooth" });
-        }
-      });
-      subList.appendChild(subListItem);
-    });
+  /* Create "Screening summary" menu item to avoid dropdown arrow */
+  const screeningSummaryItem = document.createElement("li");
+  screeningSummaryItem.textContent = "Screening summary";
+  screeningSummaryItem.classList.add("menu-item");
+  screeningSummaryItem.addEventListener("click", () => {
+    const screeningSummaryElement = Array.from(
+      document.querySelectorAll("h2")
+    ).find((el) => el.textContent === "Screening summary");
+    scrollToSection(screeningSummaryElement);
   });
+
+  list.appendChild(screeningSummaryItem);
+
+  sectionsAndSubsections.forEach((item) => {
+    if (item.itemType === "main-title") {
+      const sectionItem = document.createElement("li");
+      sectionItem.classList.add("menu-item", item.itemType);
+
+      const title = document.createElement("span");
+      title.textContent = item.title;
+      title.classList.add("menu-item-title");
+      sectionItem.appendChild(title);
+
+      // Check if the item is not the "Screening summary"
+      if (item.title !== "Screening summary") {
+        const arrowBox = document.createElement("div");
+        arrowBox.classList.add("menu-item-arrow-box");
+        sectionItem.appendChild(arrowBox);
+
+        const arrow = document.createElement("span");
+        arrow.textContent = "▼";
+        arrow.classList.add("menu-item-arrow");
+        arrowBox.appendChild(arrow);
+
+        // Add click event listener for the title to scroll to section
+        title.addEventListener("click", () => {
+          scrollToSection(item.element);
+        });
+
+        // Add click event listener for the arrow to toggle submenu
+        arrowBox.addEventListener("click", (e) => {
+          e.stopPropagation();
+          sectionItem.classList.toggle("active");
+          arrow.textContent = sectionItem.classList.contains("active")
+            ? "▲"
+            : "▼";
+          const subList = sectionItem.querySelector("ul");
+          subList.classList.toggle("active");
+        });
+      } else {
+        // If the item is "Screening summary", add the click event listener to scroll to section
+        title.addEventListener("click", () => {
+          scrollToSection(item.element);
+        });
+      }
+
+      list.appendChild(sectionItem);
+
+      const subList = document.createElement("ul");
+      subList.classList.add("submenu-list");
+      sectionItem.appendChild(subList);
+
+      const childSections = sectionsAndSubsections.filter(
+        (child) => child.parentTitle === item.title
+      );
+      childSections.forEach((child) => {
+        const subListItem = document.createElement("li");
+        subListItem.textContent = child.title;
+        subListItem.classList.add("menu-item", child.itemType);
+
+        subListItem.addEventListener("click", (e) => {
+          e.stopPropagation();
+          scrollToSection(child.element);
+        });
+        subList.appendChild(subListItem);
+      });
+    }
+  });
+
+  /* Create "Internal notes" menu item to avoid dropdown arrow */
+  const internalNotesItem = document.createElement("li");
+  internalNotesItem.textContent = "Internal Notes";
+  internalNotesItem.classList.add("menu-item");
+  internalNotesItem.addEventListener("click", () =>
+    scrollToSection(document.querySelector(".Polaris-Card_yis1o"))
+  );
+
+  // Add "Internal Notes" menu item to the bottom of the menu
+  list.appendChild(internalNotesItem);
 
   return menuWrapper;
 }
 
-function getElementByTextAndSize(text, size) {
-  const allElements = Array.from(document.querySelectorAll("body *"));
-  const targetFontSize = parseFloat(size) * parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const matchingElements = allElements.filter((element) => {
-    const computedStyle = window.getComputedStyle(element, null);
-    const fontSizeInPx = parseFloat(computedStyle.fontSize);
-    if (fontSizeInPx === targetFontSize && element.textContent.trim() === text) {
-      return true;
-    }
-    return false;
-  });
-
-  if (matchingElements.length > 0) {
-    return matchingElements[0];
-  }
-  return null;
-}
-
 let observerInitialized = false;
+let fixedMenu;
+
+function updateMenu() {
+  const currentSections = getSectionsAndSubsections();
+
+  if (fixedMenu) {
+    fixedMenu.remove();
+  }
+  fixedMenu = createMenu(currentSections);
+  document.body.appendChild(fixedMenu);
+}
 
 function injectStyles(url) {
   const link = document.createElement("link");
@@ -133,39 +192,43 @@ function initObserver() {
   if (observerInitialized) return;
   observerInitialized = true;
 
-  injectStyles(chrome.runtime.getURL("styles.css")); // Update this line to set the URL of the external 'styles.css' file
+  injectStyles(chrome.runtime.getURL("styles.css"));
 
   const observer = new MutationObserver((mutationsList) => {
-    let fixedMenu;
+    const mainContent = document.querySelector(
+      ".Polaris-Layout__Section_1b1h1"
+    );
 
-const updateMenu = () => {
-  if (fixedMenu) {
-    fixedMenu.remove();
-  }
-  fixedMenu = createMenu();
-  document.body.appendChild(fixedMenu);
-};
-
-    if (document.querySelector(".Polaris-Frame__Content_xd1mk")) {
+    if (mainContent) {
       updateMenu();
 
       observer.disconnect();
-      
+
       const contentObserver = new MutationObserver((mutationsList) => {
         updateMenu();
       });
-      
-      const contentNode = document.querySelector(".Polaris-Frame__Content_xd1mk");
-      if (contentNode) {
-        contentObserver.observe(contentNode, { childList: true, subtree: true });
-      }
-      
+
+      contentObserver.observe(mainContent, { childList: true, subtree: true });
     }
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
-if (/^https:\/\/apps\.shopify\.com\/internal\/v2\/app-submissions\/[\w\d-]+\/screening\//.test(window.location.href)){
+if (
+  /^https:\/\/apps\.shopify\.com\/internal\/v2\/app-submissions\/[\w\d-]+\/screening\//.test(
+    window.location.href
+  )
+) {
   initObserver();
+}
+
+function init() {
+  updateMenu();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
 }
